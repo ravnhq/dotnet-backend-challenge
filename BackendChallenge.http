@@ -1,0 +1,9 @@
+@BackendChallenge_HostAddress = http://localhost:5198
+
+### Get Courses
+GET {{BackendChallenge_HostAddress}}/courses/
+Accept: application/json
+
+### Get Student By Id (Existing)
+GET {{BackendChallenge_HostAddress}}/students/58E2D6DB-0B3F-48B3-B424-44C217805A9B
+Accept: application/json
