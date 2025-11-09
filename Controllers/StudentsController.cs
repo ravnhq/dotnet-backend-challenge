@@ -27,20 +27,18 @@ public class StudentsController : ControllerBase
     {
         var student = await _context.Students
             .Where(x => x.Id == studentId)
-            .Select(x => new StudentResponseDto
-            {
-                Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                CreatedAt = x.CreatedAt,
-                EnrolledCourses = x.EnrolledCourses.Select(er => new EnrolledCourseDto
-                {
-                    Id = er.Id,
-                    Name = er.Course!.Name,
-                    Credits = er.Credits,
-                    EnrolledAt = er.EnrolledAt
-                }).ToList()
-            }).FirstOrDefaultAsync();
+            .Select(x => new StudentResponseDto(
+                x.Id,
+                x.FirstName,
+                x.LastName,
+                x.CreatedAt,
+                x.EnrolledCourses.Select(er => new EnrolledCourseDto(
+                    er.Id,
+                    er.Course!.Name,
+                    er.Credits,
+                    er.EnrolledAt
+                )).ToList()
+            )).FirstOrDefaultAsync();
 
         if (student is null)
         {
