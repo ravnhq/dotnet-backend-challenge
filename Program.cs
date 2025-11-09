@@ -77,15 +77,3 @@ using (var context = dbContextFactory.CreateDbContext())
 }
 
 app.Run();
-
-public record AddStudentDto(string FirstName, string LastName, string Phone);
-
-public class AddStudentDtoValidator : AbstractValidator<AddStudentDto>
-{
-    public AddStudentDtoValidator()
-    {
-        RuleFor(x => x.FirstName).NotEmpty().MaximumLength(20);
-        RuleFor(x => x.LastName).NotEmpty().MaximumLength(20);
-        RuleFor(x => x.Phone).MaximumLength(10);
-    }
-}
