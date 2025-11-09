@@ -1,3 +1,4 @@
+using BackendChallenge.DTOs;
 using BackendChallenge.Infrastructure.Database;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -20,22 +21,24 @@ public class StudentsController : ControllerBase
     }
 
     [HttpGet("{studentId:guid}")]
-    public async Task<ActionResult> GetStudentById(Guid studentId)
+    [ProducesResponseType<StudentResponseDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<StudentResponseDto>> GetStudentById(Guid studentId)
     {
         var student = await _context.Students
             .Where(x => x.Id == studentId)
-            .Select(x => new
+            .Select(x => new StudentResponseDto
             {
-                x.Id,
-                x.FirstName,
-                x.LastName,
-                x.CreatedAt,
-                EnrollesCoursed = x.EnrolledCourses.Select(er => new
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                CreatedAt = x.CreatedAt,
+                EnrolledCourses = x.EnrolledCourses.Select(er => new EnrolledCourseDto
                 {
-                    er.Id,
-                    er.Credits,
-                    er.EnrolledAt,
-                    er.Course.Name
+                    Id = er.Id,
+                    Name = er.Course!.Name,
+                    Credits = er.Credits,
+                    EnrolledAt = er.EnrolledAt
                 }).ToList()
             }).FirstOrDefaultAsync();
 
