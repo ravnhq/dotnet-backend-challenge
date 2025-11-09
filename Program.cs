@@ -10,6 +10,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+
+// Add Swagger/OpenAPI services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Backend Challenge API",
+        Description = "Live coding backend challenge.",
+    });
+});
+
 builder.Services.AddProblemDetails(options =>
 {
     options.CustomizeProblemDetails = (context) =>
@@ -41,6 +54,15 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+
+    // Enable Swagger middleware
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend Challenge API v1");
+        options.RoutePrefix = "swagger";
+        options.DocumentTitle = "Backend Challenge API Documentation";
+    });
 }
 
 app.UseExceptionHandler();
