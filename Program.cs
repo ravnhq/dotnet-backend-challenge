@@ -51,7 +51,7 @@ app.MapControllers();
 var dbContextFactory = app.Services.GetRequiredService<IDbContextFactory<AppDbContext>>();
 using (var context = dbContextFactory.CreateDbContext())
 {
-    await DbSeeder.SeedAndCreateDbAsync(context);
+    await context.Database.MigrateAsync();
 }
 
 app.Run();
